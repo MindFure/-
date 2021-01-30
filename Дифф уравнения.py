@@ -9,7 +9,7 @@ from scipy.optimize import minimize
 from sklearn.metrics import mean_squared_log_error, mean_squared_error
 
 def dS_dt(a_t,tau,alf_I,S,I,E,R,N,alf_E,y):
-    return -(((5-(a_t-tau))/5)*(((alf_I*S*I)/N)+((alf_E*S*E)/N))+y*R)
+    return -(((5-(a_t-tau))/5)*((((alf_I*S*I)/N))+(((alf_E*S*E)/N)))+y*R)
 
 
 
@@ -49,13 +49,16 @@ def SEIR_HCD(t,y,a_t=2,tau=2,alf_I=0.5,alf_E=0.5,k=0.5,p=0,b=0.5,y_s=0,u=0.5,eps
     H_0 = dH_dt(u,I,eps_c_h,C,eps_h_c,eps_h_r,H)
     C_0 = dC_dt(eps_h_c,H,eps_c_h,C,m)
     D_0 = dD_dt(m,C)
+    
     return (S_0, E_0, I_0, R_0, H_0, C_0, D_0)
 
 N = 100000  #Количество человек
-n_infected = 90000 # кол-во инфицированных
-max_days = 100 #дней с момента заражения
-initial_state = [(N - n_infected)/ N, 0, n_infected / N, 0, 0, 0, 0]
-stat = solve_ivp(SEIR_HCD, [0, max_days], initial_state, t_leav=np.arange(max_days))
+N_inf = 10000 # кол-во инфицированных
+max_days = 365 #дней с момента заражения
+init_stat = [(N - N_inf)/ N, 500, N_inf / N, 0, 0, 0, 0]
+stat = solve_ivp(SEIR_HCD, [0, max_days], init_stat)
 
 print(stat)
+
+
 
